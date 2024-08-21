@@ -1,0 +1,85 @@
+pipeline {
+    agent none
+    stages{
+        stage("HRMS Deploying Started...") {
+            agent any
+            environment {
+                ENV = credentials('ENV')                                // .env file
+                DOCKER_IMAGE_NAME = credentials('DOCKER_IMAGE_NAME')    // bysl-hrms_development-app
+                PORT = credentials('PORT')                              // 8080
+                STORAGE_PATH = credentials('STORAGE_PATH')              // /var/www/hrms-attendance/storage
+                UPLOADS_PATH = credentials('UPLOADS_PATH')              // /var/www/hrms-attendance/public/uploads
+            }
+            stages {
+                stage("Copy ENV file...") {
+                    steps {
+                        sh "sudo cp \$ENV ./.env"
+                    }
+                }
+                stage("Jenkins Permission...") {
+                    steps {
+                        sh "sudo chmod +x -R ./.jenkins"
+                    }
+                }
+                stage("Remove Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/remove-image.sh \$DOCKER_IMAGE_NAME'
+                    }
+                }
+                stage("Build Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/build-image.sh'
+                    }
+                }
+                stage("Stop Docker Container...") {
+                    when {
+                        branch 'development'
+                    }
+                    steps{
+                        sh './.jenkins/docker/stop-container.sh \$DOCKER_IMAGE_NAME'
+                    }
+                }
+                stage("Remove Docker Container...") {
+                    when {
+                        branch 'development'
+                    }
+                    steps{
+                        sh './.jenkins/docker/remove-container.sh \$DOCKER_IMAGE_NAME'
+                    }
+                }
+                stage("Run Docker Image...") {
+                    when {
+                        branch 'development'
+                    }
+                    steps{
+                        sh './.jenkins/laravel/laravel-run.sh \$DOCKER_IMAGE_NAME \$PORT \$STORAGE_PATH \$UPLOADS_PATH'
+                    }
+                }
+                stage("Laravel Permission...") {
+                    when {
+                        branch 'development'
+                    }
+                    steps{
+                        sh './.jenkins/laravel/laravel-permission-docker.sh \$DOCKER_IMAGE_NAME'
+                    }
+                }
+                stage("Laravel Migration...") {
+                    when {
+                        branch 'development'
+                    }
+                    steps{
+                        sh './.jenkins/laravel/laravel-migrate-docker.sh \$DOCKER_IMAGE_NAME'
+                    }
+                }
+                stage("Laravel Clear Cache...") {
+                    when {
+                        branch 'development'
+                    }
+                    steps{
+                        sh './.jenkins/laravel/laravel-clear-cache-docker.sh \$DOCKER_IMAGE_NAME'
+                    }
+                }
+            }
+        }
+    }
+}

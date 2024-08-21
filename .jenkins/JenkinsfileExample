@@ -1,0 +1,257 @@
+pipeline {
+    agent none
+    stages{
+        stage("Development Docker") {
+            agent {
+                node {
+                    label 'development-label'
+                    customWorkspace '/srv/www/evrydy'
+                }
+            }
+            when {
+                branch 'development-docker'
+            }
+            environment {
+                ENV = credentials('env')
+            }
+            stages {
+                stage("Copy ENV file...") {
+                    steps {
+                        sh "sudo cp \$ENV /srv/www/evrydy/.env"
+                    }
+                }
+                stage("Jenkins Permission...") {
+                    steps {
+                        sh "sudo chmod +x -R ./.jenkins"
+                    }
+                }
+                stage("Stop Docker Container...") {
+                    steps{
+                        sh './.jenkins/docker/stop-container.sh'
+                    }
+                }
+                stage("Remove Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/remove-image.sh'
+                    }
+                }
+                stage("Remove Docker Container...") {
+                    steps{
+                        sh './.jenkins/docker/remove-container.sh'
+                    }
+                }
+                stage("Build Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/build-image.sh'
+                        
+                    }
+                }
+                stage("Run Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/run.sh'
+                    }
+                }
+            }
+        }
+        stage("Production") {
+            agent {
+                node {
+                    label 'production-label'
+                    customWorkspace '/var/www/evrydy'
+                }
+            }
+            when {
+                branch 'master'
+            } 
+            stages {
+                stage("Copy ENV file...") {
+                    steps {
+                        sh "sudo cp \$ENV /var/www/evrydy/.env"
+                    }
+                }
+                stage("Jenkins Permission...") {
+                    steps {
+                        sh "sudo chmod +x -R ./.jenkins"
+                    }
+                }
+                stage("Stop Docker Container...") {
+                    steps{
+                        sh './.jenkins/docker/stop-container.sh'
+                    }
+                }
+                stage("Remove Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/remove-image.sh'
+                    }
+                }
+                stage("Remove Docker Container...") {
+                    steps{
+                        sh './.jenkins/docker/remove-container.sh'
+                    }
+                }
+                stage("Build Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/build-image.sh'
+                    }
+                }
+                stage("Run Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/run.sh'
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Another Example
+
+pipeline {
+    agent none
+    stages{
+        stage("Development") {
+            agent {
+                label {
+                    label 'development-label'
+                    customWorkspace '/var/www/evrydy'
+                }
+            }
+            stages {
+                stage("Jenkins Permission...") {
+                    steps {
+                        sh "sudo chmod +x -R ./.jenkins"
+                    }
+                }
+                stage("Laravel Permission...") {
+                    steps {
+                        sh './.jenkins/php/laravel-permission.sh'
+                    }
+                }
+                stage("Composer Install...") {
+                    steps {
+                        sh './.jenkins/php/composer-install.sh'
+                    }
+                }
+                stage("Migration...") {
+                    steps {
+                        sh './.jenkins/php/laravel-migrate.sh'
+                    }
+                }
+                stage("Cache Clear...") {
+                    steps {
+                        sh './.jenkins/php/laravel-clear-cache.sh'
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Another Example
+
+
+pipeline {
+    agent none
+    stages{
+        stage("Production") {
+            agent {
+                label {
+                    label 'production-label'
+                    customWorkspace '/var/www/evrydy'
+                }
+            }
+            stages {
+                stage("Jenkins Permission...") {
+                    steps {
+                        sh "sudo chmod +x -R ./.jenkins"
+                    }
+                }
+                stage("Laravel Permission...") {
+                    steps {
+                        sh './.jenkins/php/laravel-permission.sh'
+                    }
+                }
+                stage("Composer Install...") {
+                    steps {
+                        sh './.jenkins/php/composer-install.sh'
+                    }
+                }
+                stage("Migration...") {
+                    steps {
+                        sh './.jenkins/php/laravel-migrate.sh'
+                    }
+                }
+                stage("Cache Clear...") {
+                    steps {
+                        sh './.jenkins/php/laravel-clear-cache.sh'
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Another Example
+
+
+pipeline {
+    agent none
+    stages{
+        stage("Production Docker") {
+            agent {
+                node {
+                    label 'production-label'
+                    customWorkspace '/var/www/evrydy'
+                }
+            }
+            environment {
+                ENV = credentials('env') //.env file
+                DOCKER_IMAGE = credentials('docker_image') //Docker Image name : evrydy-app
+                PORT = credentials('port') //port : 7788
+            }
+            stages {
+                stage("Copy ENV file...") {
+                    steps {
+                        sh "sudo cp \$ENV /srv/www/evrydy/.env"
+                    }
+                }
+                stage("Jenkins Permission...") {
+                    steps {
+                        sh "sudo chmod +x -R ./.jenkins"
+                    }
+                }
+                stage("Stop Docker Container...") {
+                    steps{
+                        sh './.jenkins/docker/stop-container.sh \$DOCKER_IMAGE'
+                    }
+                }
+                stage("Remove Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/remove-image.sh'
+                    }
+                }
+                stage("Remove Docker Container...") {
+                    steps{
+                        sh './.jenkins/docker/remove-container.sh'
+                    }
+                }
+                stage("Build Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/build-image.sh' 
+                        
+                    }
+                }
+                stage("Run Docker Image...") {
+                    steps{
+                        sh './.jenkins/docker/run.sh \$DOCKER_IMAGE \$PORT'
+                    }
+                }
+                stage("Migration...") {
+                    steps{
+                        sh './.jenkins/docker/migrate.sh'
+                    }
+                }
+            }
+        }
+    }
+}

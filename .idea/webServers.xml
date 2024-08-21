@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1786f59a-1123-4a2f-8fc2-4343c69066f5" name="'84 Dev">
+        <fileTransfer rootFolder="/var/www/hrms-attendance" accessType="SFTP" host="203.83.190.84" port="22" sshConfigId="aaada6bb-7bac-4814-82db-f5591c751ac0" sshConfig="development@203.83.190.84:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

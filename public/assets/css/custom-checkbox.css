@@ -1,0 +1,110 @@
+.selectBox input {
+    display: none;
+}
+
+.selectBox input:checked + label {
+    border-color: #00c853;
+    z-index: 1;
+    box-shadow: 0 0 0 1px rgba(0, 200, 83, 0.1);
+}
+
+.selectBox input:checked + label:before {
+    background: #00c853;
+    box-shadow: 0 0 0 1px #00c853;
+}
+
+.selectBox label {
+    position: relative;
+    padding: 5px 5px 5px 30px;
+    cursor: pointer;
+    font-weight: bold;
+
+}
+
+.selectBox label:before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 0 1px #ccc;
+    border: 1px solid #fff;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.selectBox label:hover {
+    border-color: #999;
+    z-index: 1;
+}
+
+.selectBox.radio label:before {
+    border-radius: 100%;
+}
+
+.selectBoxGroup {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.selectBoxGroup .selectBox {
+    margin-left: -1px;
+}
+
+.selectBoxGroup .selectBox:first-child {
+    margin-left: 0;
+}
+
+@media screen and (max-width: 568px) {
+    .selectBoxGroup {
+        flex-direction: column;
+    }
+
+    .selectBoxGroup .selectBox {
+        margin-left: 0;
+    }
+
+    .selectBoxGroup .selectBox label {
+        width: 100%;
+    }
+}
+
+.selectBoxGroup.underneath {
+    flex-direction: column;
+}
+
+.selectBoxGroup.underneath .selectBox {
+    margin-left: 0;
+}
+
+.selectBoxGroup.underneath .selectBox label {
+    width: 100%;
+}
+
+.selectBoxGroup.rtl {
+    direction: rtl;
+}
+
+.selectBoxGroup.rtl label {
+    width: 100%;
+    padding: 10px 10px 10px 10px;
+    text-align: right;
+}
+
+.selectBoxGroup.rtl label:before {
+    right: 15px;
+}
+
+.selectBox {
+    right: 15px;
+
+}
+
+.popup-icon{
+    font-size: 14px;
+    margin: 10px;
+}
+.popover {
+    border: 1px dashed #2E8EFF;
+}
+

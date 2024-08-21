@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: .docker/production/Dockerfile
+        container_name: hrms
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge

@@ -1,0 +1,69 @@
+.dashboard-card {
+    /*height: 200px;*/
+}
+
+.dataTables_wrapper .dataTable th.sorting_asc,
+.dataTables_wrapper .dataTable td.sorting_asc{
+    color: white !important;
+}
+
+.custom-thead {
+    background-color: #3999ff;
+    color: #fff !important;
+}
+
+.dataTables_wrapper .dataTable tfoot th,
+.dataTables_wrapper .dataTable thead th {
+    color: white !important;
+}
+
+.dataTables_wrapper .dataTable th.sorting_desc,
+.dataTables_wrapper .dataTable td.sorting_desc {
+    color: white !important;
+}
+
+/*the container must be positioned relative:*/
+.autocomplete {
+    position: relative;
+    display: inline-block;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    /*border-top: none;*/
+    z-index: 9999;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 13px;
+    right: 0;
+    width: max-content;
+    max-height: 243px;
+    overflow-x: hidden;
+    white-space: nowrap;
+    min-width: 90%;
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+    background-color: #e9e9e9;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
+
+.required_symbol {
+    color: red !important;
+}
+
